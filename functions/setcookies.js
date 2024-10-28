@@ -4,7 +4,7 @@ export async function onRequest(context) {
 
     // CORS headers for the response
     const responseHeaders = new Headers();
-    responseHeaders.append("Access-Control-Allow-Origin", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app");
+    responseHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
     responseHeaders.append("Access-Control-Allow-Credentials", "true");
     responseHeaders.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     responseHeaders.append("Access-Control-Allow-Headers", "Authorization, Content-Type");
