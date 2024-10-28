@@ -25,23 +25,23 @@ export async function onRequest(context) {
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
 
     // Return a 200 response with a client-side redirect script
-    const htmlResponse = `
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <title>Setting JWT</title>
-                <script>
-                    // Redirect after setting the cookie
-                    window.location.href = "https://foreign.pages.dev";
-                </script>
-            </head>
-            <body>
-                <p>Setting your session. Redirecting...</p>
-            </body>
-        </html>
-    `;
+    // const htmlResponse = `
+    //     <!DOCTYPE html>
+    //     <html>
+    //         <head>
+    //             <title>Setting JWT</title>
+    //             <script>
+    //                 // Redirect after setting the cookie
+    //                 window.location.href = "https://foreign.pages.dev";
+    //             </script>
+    //         </head>
+    //         <body>
+    //             <p>Setting your session. Redirecting...</p>
+    //         </body>
+    //     </html>
+    // `;
 
-    return new Response(htmlResponse, {
+    return new Response(null, {
         status: 200,
         headers: responseHeaders,
     });
