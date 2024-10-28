@@ -17,10 +17,15 @@ export async function onRequest(context) {
     responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
 
     // Create a new response for the redirect
+    const redirectResponse = Response.redirect('https://foreign.pages.dev', 303);
 
     // Create new headers for the redirect response
 
     console.log('JWT set on foreign app, redirecting to homepage...');
-    return Response.redirect('https://foreign.pages.dev', 303);
 
+    // Create a new Response object for the redirect with the modified headers
+    return new Response(redirectResponse.body, {
+        status: redirectResponse.status,
+        statusText: redirectResponse.statusText
+    });
 }
