@@ -1,7 +1,22 @@
 export async function onRequest(context) {
     const url = new URL(context.request.url);
-    const token = url.searchParams.get("token");
+    //const token = url.searchParams.get("token");
 
+    // get request headers
+    const headers = context.request.headers;
+    // get Authorization
+    const authorization = headers.get("Authorization");
+    if (!authorization) {
+        console.log('No Authorization header found');
+        return new Response('No Authorization header found', { status: 400 });
+    }
+
+    // get token from Authorization header
+    const token = authorization.split(" ")[1];
+    if (!token) {
+        console.log('No token found in Authorization header');
+        return new Response('No token found in Authorization header', { status: 400 });
+    }
     // CORS headers for the response
     const origin = context.request.headers.get("Origin");
     const responseHeaders = new Headers();
