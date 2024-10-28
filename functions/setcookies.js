@@ -15,12 +15,11 @@ export async function onRequest(context) {
         return new Response('No token found', { status: 400, headers: responseHeaders });
     }
 
-    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
 
     console.log('JWT set on foreign app, redirecting to homepage...');
-
-    // Redirect to homepage after setting the cookie
     const redirectResponse = Response.redirect('https://foreign.pages.dev');
+    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
+    // Redirect to homepage after setting the cookie
     console.log('redirectResponse', redirectResponse);
     return redirectResponse;
 }
