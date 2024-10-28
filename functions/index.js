@@ -28,7 +28,7 @@ export async function onRequest(context) {
             </html>
         `, { headers: { 'Content-Type': 'text/html' } });
     }
-    const responseHeaders = new Headers(redirectResponse.headers);
+    const responseHeaders = new Headers();
     redirectHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
     redirectHeaders.append("Access-Control-Allow-Credentials", "true");
     redirectHeaders.append("Content-Type", "text/html");
