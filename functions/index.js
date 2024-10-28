@@ -4,15 +4,15 @@ export async function onRequest(context) {
     const jwt = cookies?.match(/jwt=([^;]+)/)?.[1];
 
     if (!jwt) {
-        console.log('No JWT found, redirecting to aaa.com');
+        console.log('No JWT found, redirecting to authorizer');
 
-        // Serve the HTML page with client-side fetch request to aaa.com/checkcookies
+        // Serve the HTML page with client-side fetch request to authorizer/checkcookies
         return new Response(`
             <html>
             <body>
                 <h1>Welcome to foreign app!</h1>
                 <script>
-                    fetch('https://authorizer-g73bas2cn-abdulkarimbas-projects.vercel.app/checkcookies', {
+                    fetch('https://authorizer-k2bnnfl74-abdulkarimbas-projects.vercel.app/checkcookies?redirect_url=https://foreign.pages.dev/', {
                         credentials: 'include'  // Cross-site cookies
                     })
                     .then(response => {
@@ -22,7 +22,7 @@ export async function onRequest(context) {
                             window.location.href = '/';
                         }
                     })
-                    .catch(error => console.error('Error fetching from aaa.com:', error));
+                    .catch(error => console.error('Error fetching from authorizer', error));
                 </script>
             </body>
             </html>
