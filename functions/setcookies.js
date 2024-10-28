@@ -20,12 +20,16 @@ export async function onRequest(context) {
     const redirectResponse = Response.redirect('https://foreign.pages.dev', 303);
 
     // Create new headers for the redirect response
+    const redirectHeaders = new Headers(redirectResponse.headers);
+    redirectHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
+    redirectHeaders.append("Access-Control-Allow-Credentials", "true");
 
     console.log('JWT set on foreign app, redirecting to homepage...');
 
     // Create a new Response object for the redirect with the modified headers
     return new Response(redirectResponse.body, {
         status: redirectResponse.status,
-        statusText: redirectResponse.statusText
+        statusText: redirectResponse.statusText,
+        headers: redirectHeaders,
     });
 }
