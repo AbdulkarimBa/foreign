@@ -17,8 +17,10 @@ export async function onRequest(context) {
 
 
     console.log('JWT set on foreign app, redirecting to homepage...');
-    const redirectResponse = Response.redirect('https://foreign.pages.dev');
+    const redirectResponse = Response.redirect('https://foreign.pages.dev', 303);
     responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
+    redirectResponse.headers.append("Access-Control-Allow-Origin", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app");
+    redirectResponse.headers.append("Access-Control-Allow-Credentials", "true");
     // Redirect to homepage after setting the cookie
     console.log('redirectResponse', redirectResponse);
     return redirectResponse;
