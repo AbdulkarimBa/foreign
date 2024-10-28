@@ -15,13 +15,6 @@ export async function onRequest(context) {
                     fetch('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies?redirectUrl=https://foreign.pages.dev', {
                         credentials: 'include' // Cross-site cookies
                     })
-                    .then(response => {
-                        if (response.ok) {
-                            const jwtToken = response.headers.get('Authorization').split(' ')[1];
-                            document.cookie = 'jwt=' + jwtToken + '; path=/; HttpOnly; Secure';
-                            window.location.href = '/';
-                        }
-                    })
                     .catch(error => console.error('Error fetching from authorizer', error));
                 </script>
             </body>

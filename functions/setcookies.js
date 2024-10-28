@@ -1,6 +1,14 @@
 export async function onRequest(context) {
     const url = new URL(context.request.url);
-    const token = url.searchParams.get("token");
+
+    // get token from Authorsation header
+    const auth = context.request.headers.get("Authorization");
+    if (!auth) {
+        console.log('No Authorization header found');
+        return new Response('No Authorization header found', { status: 400 });
+    }
+
+    const token = auth.split(" ")[1];
 
     // CORS headers for the response
     const origin = context.request.headers.get("Origin");
@@ -11,13 +19,6 @@ export async function onRequest(context) {
     }
     responseHeaders.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     responseHeaders.append("Access-Control-Allow-Headers", "Authorization, Content-Type");
-
-
-    // Check if token is present
-    if (!token) {
-        console.log('No token found');
-        return new Response('No token found', { status: 400, headers: responseHeaders });
-    }
 
     // Set the cookie
     responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
