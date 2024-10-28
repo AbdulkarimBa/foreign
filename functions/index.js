@@ -8,32 +8,36 @@ export async function onRequest(context) {
 
         // Serve the HTML page with client-side fetch request to authorizer/checkcookies
         return new Response(`
-            <html>
+           <html>
             <body>
                 <h1>Welcome to foreign app!</h1>
                 <script>
-                    const response = await fetch('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies', {
-                        method: 'POST',
-                        credentials: 'include', // Cross-site cookie setting
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ redirectUrl: 'https://foreign.pages.dev' })
-                    });
+                const response = fetch(
+                    "https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies",
+                    {
+                    method: "POST",
+                    credentials: "include", // Cross-site cookie setting
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ redirectUrl: "https://foreign.pages.dev" }),
+                    }
+                )
+                    .then((response) => {
                     if (response.ok) {
-                        const data = await response.json();
+                        const data = response.json();
                         const token = data.token;
                         const redirectUrl = data.redirectUrl;
 
                         // Set the token as a cookie
-                        document.cookie = jwt=token; path=/; HttpOnly; Secure;
-
+                        document.cookie = "jwt=" + token + "; path=/; HttpOnly; Secure;";
                         // Redirect to the foreign app
                         window.location.href = redirectUrl;
                     } else {
-                        console.error('Failed to fetch token');
+                        console.error("Failed to fetch token");
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
+                    })
+                    .catch((error) => {
+                    console.error("Error fetching token", error);
+                    });
                 </script>
             </body>
             </html>
