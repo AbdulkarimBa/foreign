@@ -21,7 +21,7 @@ export async function onRequest(context) {
     // Create new headers for the redirect response
     const redirectHeaders = new Headers(redirectResponse.headers);
     redirectHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
-    redirectHeaders.append("Access-Control-Allow-Origin", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app");
+    redirectHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
     redirectHeaders.append("Access-Control-Allow-Credentials", "true");
 
     console.log('JWT set on foreign app, redirecting to homepage...');
