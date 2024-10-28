@@ -29,9 +29,9 @@ export async function onRequest(context) {
         `, { headers: { 'Content-Type': 'text/html' } });
     }
     const responseHeaders = new Headers();
-    // redirectHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
-    // redirectHeaders.append("Access-Control-Allow-Credentials", "true");
-    redirectHeaders.append("Content-Type", "text/html");
+    // responseHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
+    // responseHeaders.append("Access-Control-Allow-Credentials", "true");
+    responseHeaders.append("Content-Type", "text/html");
     // If JWT exists, show the authenticated page
     return new Response('<h1>Welcome to foreign app! You are authenticated.</h1>', { headers: responseHeaders });
 }
