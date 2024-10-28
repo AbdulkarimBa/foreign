@@ -10,9 +10,9 @@ export async function onRequest(context) {
         return new Response(`
             <html>
             <body>
-                <h1>Welcome to bbb.com!</h1>
+                <h1>Welcome to foreign app!</h1>
                 <script>
-                    fetch('http://aaa.com:3000/checkcookies', {
+                    fetch('https://authorizer-g73bas2cn-abdulkarimbas-projects.vercel.app/checkcookies', {
                         credentials: 'include'  // Cross-site cookies
                     })
                     .then(response => {
@@ -30,5 +30,5 @@ export async function onRequest(context) {
     }
 
     // If JWT exists, show the authenticated page
-    return new Response('<h1>Welcome to bbb.com! You are authenticated.</h1>', { headers: { 'Content-Type': 'text/html' } });
+    return new Response('<h1>Welcome to foreign app! You are authenticated.</h1>', { headers: { 'Content-Type': 'text/html' } });
 }

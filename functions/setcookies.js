@@ -10,7 +10,7 @@ export async function onRequest(context) {
     const headers = new Headers();
     headers.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
 
-    console.log('JWT set on bbb.com, redirecting to homepage...');
+    console.log('JWT set on foreign app, redirecting to homepage...');
 
     // Redirect to homepage after setting the cookie
     return Response.redirect('/', 303, { headers });
