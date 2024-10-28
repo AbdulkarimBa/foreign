@@ -22,9 +22,5 @@ export async function onRequest(context) {
     // Redirect to homepage after setting the cookie
     const redirectResponse = Response.redirect('https://foreign.pages.dev', 303);
     console.log('redirectResponse', redirectResponse);
-    redirectResponse.headers.append("Access-Control-Allow-Origin", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app");
-    redirectResponse.headers.append("Access-Control-Allow-Credentials", "true");
-    redirectResponse.headers.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
-    console.log('after redirectResponse', redirectResponse);
     return redirectResponse;
 }
