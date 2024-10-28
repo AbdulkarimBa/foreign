@@ -12,8 +12,8 @@ export async function onRequest(context) {
             <body>
                 <h1>Welcome to foreign app!</h1>
                 <script>
-                    fetch('https://authorizer-k2bnnfl74-abdulkarimbas-projects.vercel.app/checkcookies?redirect_url=https://foreign.pages.dev/', {
-                        credentials: 'include'  // Cross-site cookies
+                    fetch('https://authorizer-9gntjw1al-abdulkarimbas-projects.vercel.app/checkcookies?redirect_url=https://foreign.pages.dev/', {
+                        credentials: 'include' // Cross-site cookies
                     })
                     .then(response => {
                         if (response.ok) {
