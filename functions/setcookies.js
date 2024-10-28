@@ -3,11 +3,15 @@ export async function onRequest(context) {
     const token = url.searchParams.get("token");
 
     // CORS headers for the response
+    const origin = context.request.headers.get("Origin");
     const responseHeaders = new Headers();
-    responseHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
-    responseHeaders.append("Access-Control-Allow-Credentials", "true");
+    if (origin) {
+        responseHeaders.append("Access-Control-Allow-Origin", origin);
+        responseHeaders.append("Access-Control-Allow-Credentials", "true");
+    }
     responseHeaders.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     responseHeaders.append("Access-Control-Allow-Headers", "Authorization, Content-Type");
+
 
     // Check if token is present
     if (!token) {
