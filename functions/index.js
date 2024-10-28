@@ -24,7 +24,7 @@ export async function onRequest(context) {
                         const redirectUrl = data.redirectUrl;
 
                         // Set the token as a cookie
-                        document.cookie = jwt=${token}; path=/; HttpOnly; Secure;
+                        document.cookie = jwt=token; path=/; HttpOnly; Secure;
 
                         // Redirect to the foreign app
                         window.location.href = redirectUrl;
