@@ -12,15 +12,28 @@ export async function onRequest(context) {
             <body>
                 <h1>Welcome to foreign app!</h1>
                 <script>
-                    fetch('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies?redirectUrl=https://foreign.pages.dev', {
-                        credentials: 'include' // Cross-site cookies
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            window.location.href = '/';
-                        }
-                    })
-                    .catch(error => console.error('Error fetching from authorizer', error));
+                    const response = await fetch('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies', {
+                        method: 'POST',
+                        credentials: 'include', // Cross-site cookie setting
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ redirectUrl: 'https://foreign.pages.dev' })
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        const token = data.token;
+                        const redirectUrl = data.redirectUrl;
+
+                        // Set the token as a cookie
+                        document.cookie = jwt=${token}; path=/; HttpOnly; Secure;
+
+                        // Redirect to the foreign app
+                        window.location.href = redirectUrl;
+                    } else {
+                        console.error('Failed to fetch token');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
                 </script>
             </body>
             </html>
