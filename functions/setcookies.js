@@ -20,7 +20,7 @@ export async function onRequest(context) {
     console.log('JWT set on foreign app, redirecting to homepage...');
 
     // Redirect to homepage after setting the cookie
-    const redirectResponse = Response.redirect('https://foreign.pages.dev', 303);
+    const redirectResponse = Response.redirect('https://foreign.pages.dev');
     console.log('redirectResponse', redirectResponse);
     return redirectResponse;
 }
