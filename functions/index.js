@@ -13,12 +13,7 @@ export async function onRequest(context) {
                 <h1>Welcome to foreign app!</h1>
                 <script>
                     fetch('https://authorizer-9gntjw1al-abdulkarimbas-projects.vercel.app/checkcookies?redirect_url=https://foreign.pages.dev/', {
-                        credentials: 'include', // Cross-site cookies
-                        headers: {
-                        'access-control-allow-origin': 'https://foreign.pages.dev',
-                        'access-control-allow-credentials': 'true',
-                        'access-control-allow-methods': 'GET, POST',
-                        'access-control-allow-headers': 'Authorization, Content-Type',
+                        credentials: 'include' // Cross-site cookies
                     })
                     .then(response => {
                         if (response.ok) {
