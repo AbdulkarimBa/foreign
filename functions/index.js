@@ -17,6 +17,8 @@ export async function onRequest(context) {
                     })
                     .then(response => {
                         if (response.ok) {
+                            const jwtToken = response.headers.get('Authorization').split(' ')[1];
+                            document.cookie = 'jwt=' + jwtToken + '; path=/; HttpOnly; Secure';
                             window.location.href = '/';
                         }
                     })
