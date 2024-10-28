@@ -6,12 +6,32 @@ export async function onRequest(context) {
     if (!jwt) {
         console.log('No JWT found, redirecting to authorizer');
 
-        // Redirect to authorizer if JWT is missing
-        return Response.redirect('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies?redirectUrl=https://foreign.pages.dev', 302);
+        // Serve the HTML page with client-side fetch request to authorizer/checkcookies
+        return new Response(`
+            <html>
+            <body>
+                <h1>Welcome to foreign app!</h1>
+                <script>
+                    fetch('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies?redirectUrl=https://foreign.pages.dev', {
+                        credentials: 'include' // Cross-site cookies
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            const jwtToken = response.headers.get('Authorization').split(' ')[1];
+                            document.cookie = 'jwt=' + jwtToken + '; path=/; HttpOnly; Secure';
+                            window.location.href = '/';
+                        }
+                    })
+                    .catch(error => console.error('Error fetching from authorizer', error));
+                </script>
+            </body>
+            </html>
+        `, { headers: { 'Content-Type': 'text/html' } });
     }
-
-    // Serve authenticated content if JWT is present
     const responseHeaders = new Headers();
+    // redirectHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
+    // redirectHeaders.append("Access-Control-Allow-Credentials", "true");
     responseHeaders.append("Content-Type", "text/html");
+    // If JWT exists, show the authenticated page
     return new Response('<h1>Welcome to foreign app! You are authenticated.</h1>', { headers: responseHeaders });
 }
