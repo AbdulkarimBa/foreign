@@ -49,9 +49,7 @@ export async function onRequest(context) {
     responseHeaders.append("Access-Control-Allow-Origin", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app");
     responseHeaders.append("Access-Control-Allow-Credentials", "true");
     responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
-    const redirectResponse = new Response('', { status: 303, headers: responseHeaders });
-    // Redirect to homepage after setting the cookie
-    // console.log('redirectResponse', redirectResponse);
-    redirectResponse.url = 'https://foreign.pages.dev';
-    return redirectResponse;
+    responseHeaders.append("Location", "https://foreign.pages.dev");
+
+    return new Response(null, { status: 303, headers: responseHeaders });
 }
