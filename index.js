@@ -63,6 +63,7 @@ app.get('/setcookies', (req, res) => {
     res.cookie("jwt", token, {
         httpOnly: true,
         secure: true,
+        sameSite: "none",
         path: "/"
     });
 
