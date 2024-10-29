@@ -63,7 +63,7 @@ app.get('/setcookies', (req, res) => {
     res.cookie("jwt", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: "none",
         path: "/",
         maxAge: 3600000, // Set to 1 hour
         domain: 'foreign-production.up.railway.app',
