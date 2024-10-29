@@ -5,63 +5,75 @@ app.use(cookieParser());
 const cors = require('cors');
 
 app.get('/', (req, res) => {
-    const jwt = req.cookies?.jwt;
+    const cookies = req.headers.get('cookie');
+    const jwt = cookies?.match(/jwt=([^;]+)/)?.[1];
 
     if (!jwt) {
-        console.log('No JWT found, making client-side request to aaa.com/checkcookies');
+        console.log('No JWT found, redirecting to authorizer');
 
-        // Serve HTML that makes a client-side fetch request to aaa.com/checkcookies
-        res.send(`
+        // Serve the HTML page with client-side fetch request to authorizer/checkcookies
+        return new Response(`
             <html>
             <body>
-                <h1>Welcome to bbb.com!</h1>
+                <h1>Welcome to foreign app!</h1>
                 <script>
-                    // Client-side request using Fetch API
-                    fetch('http://aaa.com:3000/checkcookies', {
-                        credentials: 'include'  // Important for cross-site cookies
+                    fetch('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies?redirectUrl=https://foreign.pages.dev', {
+                        credentials: 'include' // Cross-site cookies
                     })
                     .then(response => {
                         if (response.ok) {
-                            // Get the JWT from the response header
-                            const jwtToken = response.headers.get('Authorization').split(' ')[1];
-
-                            // Set the JWT as a cookie
-                            document.cookie = 'jwt=' + jwtToken + '; path=/; HttpOnly; Secure';
-
-                            // Redirect to the main page after setting the cookie
                             window.location.href = '/';
                         }
                     })
-                    .catch(error => console.error('Error fetching from aaa.com:', error));
+                    .catch(error => console.error('Error fetching from authorizer', error));
                 </script>
             </body>
             </html>
-        `);
-    } else {
-        // If JWT exists, render the authenticated page
-        res.send('<h1>Welcome to bbb.com! You are authenticated.</h1>');
+        `, { headers: { 'Content-Type': 'text/html' } });
     }
+    const responseHeaders = new Headers();
+    // redirectHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
+    // redirectHeaders.append("Access-Control-Allow-Credentials", "true");
+    responseHeaders.append("Content-Type", "text/html");
+    // If JWT exists, show the authenticated page
+    return new Response('<h1>Welcome to foreign app! You are authenticated.</h1>', { headers: responseHeaders });
 });
 
 // Endpoint to set cookies on bbb.com
 app.get('/setcookies', (req, res) => {
-    const { token } = req.query;
+    const url = new URL(req.url);
+    const token = url.searchParams.get("token");
 
     if (!token) {
-        console.log('No token found in query');
-        return res.status(400).send('No token found');
+        console.log('No token found in Authorization header');
+        return new Response('No token found in Authorization header', { status: 400 });
+    }
+    // CORS headers for the response
+    const origin = req.headers.get("Origin");
+    const responseHeaders = new Headers();
+    if (origin) {
+        responseHeaders.append("Access-Control-Allow-Origin", origin);
+        responseHeaders.append("Access-Control-Allow-Credentials", "true");
+    }
+    responseHeaders.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    responseHeaders.append("Access-Control-Allow-Headers", "Authorization, Content-Type");
+
+
+    // Check if token is present
+    if (!token) {
+        console.log('No token found');
+        return new Response('No token found', { status: 400, headers: responseHeaders });
     }
 
-    // Set the cookie received from aaa.com
-    res.cookie('jwt', token, {
-        httpOnly: true,
-        secure: false,  // Set to true when using HTTPS
+    // Set the cookie
+    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
+
+    console.log('JWT set on foreign app. Client will handle redirect to homepage.');
+
+    return new Response(null, {
+        status: 200,
+        headers: responseHeaders,
     });
-
-    console.log('JWT set on bbb.com, redirecting to homepage...');
-
-    // After setting the cookie, redirect to the homepage
-    return res.redirect('/');
 });
 
 app.listen(3001, () => {
