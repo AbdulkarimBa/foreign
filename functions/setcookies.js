@@ -25,31 +25,28 @@ export async function onRequest(context) {
     }
     // CORS headers for the response
     const origin = context.request.headers.get("Origin");
+    const allowedOrigins = ["https://foreign.pages.dev", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app"];
     const responseHeaders = new Headers();
-    if (origin) {
+
+    // Dynamically set the CORS origin if it matches one of the allowed origins
+    if (allowedOrigins.includes(origin)) {
         responseHeaders.append("Access-Control-Allow-Origin", origin);
         responseHeaders.append("Access-Control-Allow-Credentials", "true");
     }
+
     responseHeaders.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     responseHeaders.append("Access-Control-Allow-Headers", "Authorization, Content-Type");
 
+    // Set cookie with the token
+    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/; SameSite=None`);
 
-    // Check if token is present
-    if (!token) {
-        console.log('No token found');
-        return new Response('No token found', { status: 400, headers: responseHeaders });
-    }
+    console.log('JWT set on foreign app. Redirecting to homepage.');
 
-    // Set the cookie
-    // responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
-
-    console.log('JWT set on foreign app. Client will handle redirect to homepage.');
-
-    // Redirect to homepage after setting the cookie
-    responseHeaders.append("Access-Control-Allow-Origin", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app");
-    responseHeaders.append("Access-Control-Allow-Credentials", "true");
-    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
+    // Redirect with Location header
     responseHeaders.append("Location", "https://foreign.pages.dev");
 
-    return new Response(null, { status: 303, headers: responseHeaders });
+    return new Response(null, {
+        status: 303,
+        headers: responseHeaders,
+    });
 }
