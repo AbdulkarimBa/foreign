@@ -64,7 +64,9 @@ app.get('/setcookies', (req, res) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        path: "/"
+        path: "/",
+        maxAge: 3600000, // Set to 1 hour
+        domain: 'foreign-production.up.railway.app',
     });
 
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
