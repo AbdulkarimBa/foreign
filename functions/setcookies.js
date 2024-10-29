@@ -40,12 +40,28 @@ export async function onRequest(context) {
     }
 
     // Set the cookie
-    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
+    // responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
 
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
 
-    return new Response(null, {
-        status: 303,
-        headers: responseHeaders,
+    return new Response(`
+        <html>
+            <body>
+                <script>
+                    // Set the JWT token in a cookie via JavaScript
+                    document.cookie = "jwt=${token}; path=/; Secure";
+                    // Redirect to the homepage or another endpoint
+                    window.location.href = '/';
+                </script>
+                <h1>Setting up your session...</h1>
+            </body>
+        </html>
+    `, {
+        headers: {
+            'Content-Type': 'text/html',
+            'Access-Control-Allow-Origin': origin,
+            'Access-Control-Allow-Credentials': 'true'
+        },
+        status: 200,
     });
 }
