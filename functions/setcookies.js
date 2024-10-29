@@ -1,3 +1,5 @@
+import { response } from "express";
+
 export async function onRequest(context) {
     const url = new URL(context.request.url);
     const token = url.searchParams.get("token");
@@ -45,11 +47,14 @@ export async function onRequest(context) {
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
 
     // Redirect to homepage after setting the cookie
-    const redirectResponse = Response.redirect('https://foreign.pages.dev', 303);
-    redirectResponse.headers.append("Access-Control-Allow-Origin", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app");
-    redirectResponse.headers.append("Access-Control-Allow-Credentials", "true");
-    redirectResponse.headers.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
+    const redirectResponse = new Response()
+    responseHeaders.append("Access-Control-Allow-Origin", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app");
+    responseHeaders.append("Access-Control-Allow-Credentials", "true");
+    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
     // Redirect to homepage after setting the cookie
     console.log('redirectResponse', redirectResponse);
+    redirectResponse.headers = responseHeaders;
+    redirectResponse.status = 303;
+    redirectResponse.url = 'https://foreign.pages.dev';
     return redirectResponse;
 }
