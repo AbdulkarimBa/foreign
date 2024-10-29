@@ -44,24 +44,8 @@ export async function onRequest(context) {
 
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
 
-    return new Response(`
-        <html>
-            <body>
-                <script>
-                    // Attempt to set the JWT cookie with domain specified
-                    document.cookie = "jwt=${token}; path=/; Secure; domain=foreign.pages.dev";
-                    // Redirect after setting the cookie
-                    window.location.href = '/';
-                </script>
-                <h1>Setting up your session...</h1>
-            </body>
-        </html>
-    `, {
-        headers: {
-            'Content-Type': 'text/html',
-            'Access-Control-Allow-Origin': origin,
-            'Access-Control-Allow-Credentials': 'true'
-        },
-        status: 200,
-    });
+    // Redirect to homepage after setting the cookie
+    const redirectResponse = Response.redirect('https://foreign.pages.dev');
+    console.log('redirectResponse', redirectResponse);
+    return redirectResponse;
 }
