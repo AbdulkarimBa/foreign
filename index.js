@@ -21,8 +21,7 @@ app.get('/', (req, res) => {
                 <h1>Welcome to foreign app!</h1>
                 <script>
                     fetch('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies?redirectUrl=https://foreign-production.up.railway.app', {
-                    method: 'POST',    
-                    credentials: 'include' // Cross-site cookies
+                        credentials: 'include' // Cross-site cookies
                     })
                     .then(response => {
                         if (response.ok) {
@@ -42,7 +41,7 @@ app.get('/', (req, res) => {
 });
 
 // Endpoint to set cookies on bbb.com
-app.post('/setcookies', (req, res) => {
+app.get('/setcookies', (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const token = url.searchParams.get("token");
 
