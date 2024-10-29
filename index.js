@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 });
 
 // Endpoint to set cookies on bbb.com
-app.post('/setcookies', (req, res) => {
+app.get('/setcookies', (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const token = url.searchParams.get("token");
 
