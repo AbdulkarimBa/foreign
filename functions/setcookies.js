@@ -3,6 +3,11 @@ export async function onRequest(context) {
     //const token = url.searchParams.get("token");
 
     // get request headers
+    console.log(JSON.stringify({
+        method: context.request.method,
+        url: context.request.url,
+        headers: Object.fromEntries(context.request.headers),
+    }, null, 2));
     const headers = context.request.headers;
     // get Authorization
     const authorization = headers.get("Authorization");
