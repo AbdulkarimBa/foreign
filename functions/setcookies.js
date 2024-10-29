@@ -1,34 +1,17 @@
-
 export async function onRequest(context) {
     const url = new URL(context.request.url);
     const token = url.searchParams.get("token");
 
-    // get request headers
-    // console.log(JSON.stringify({
-    //     method: context.request.method,
-    //     url: context.request.url,
-    //     headers: Object.fromEntries(context.request.headers),
-    // }, null, 2));
-    // const headers = context.request.headers;
-    // // get Authorization
-    // const authorization = headers.get("Authorization");
-    // if (!authorization) {
-    //     console.log('No Authorization header found');
-    //     return new Response('No Authorization header found', { status: 400 });
-    // }
-
-    // // get token from Authorization header
-    // const token = authorization.split(" ")[1];
     if (!token) {
-        console.log('No token found in Authorization header');
+        console.log('No token found');
         return new Response('No token found in Authorization header', { status: 400 });
     }
-    // CORS headers for the response
+
+    // Get the origin and set CORS headers if it's allowed
     const origin = context.request.headers.get("Origin");
     const allowedOrigins = ["https://foreign.pages.dev", "https://authorizer-git-main-abdulkarimbas-projects.vercel.app"];
     const responseHeaders = new Headers();
 
-    // Dynamically set the CORS origin if it matches one of the allowed origins
     if (allowedOrigins.includes(origin)) {
         responseHeaders.append("Access-Control-Allow-Origin", origin);
         responseHeaders.append("Access-Control-Allow-Credentials", "true");
@@ -37,16 +20,21 @@ export async function onRequest(context) {
     responseHeaders.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     responseHeaders.append("Access-Control-Allow-Headers", "Authorization, Content-Type");
 
-    // Set cookie with the token
-    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/; SameSite=None`);
+    // Serve an HTML page with JavaScript to set the cookie and redirect
+    const htmlContent = `
+        <html>
+        <body>
+            <script>
+                document.cookie = "jwt=${token}; path=/; Secure; HttpOnly; SameSite=None";
+                window.location.href = "https://foreign.pages.dev";
+            </script>
+            <p>Redirecting...</p>
+        </body>
+        </html>
+    `;
 
-    console.log('JWT set on foreign app. Redirecting to homepage.');
-
-    // Redirect with Location header
-    responseHeaders.append("Location", "https://foreign.pages.dev");
-
-    return new Response(null, {
-        status: 303,
-        headers: responseHeaders,
+    return new Response(htmlContent, {
+        status: 200,
+        headers: { "Content-Type": "text/html", ...responseHeaders }
     });
 }
