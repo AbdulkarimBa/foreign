@@ -45,7 +45,7 @@ export async function onRequest(context) {
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
 
     return new Response(null, {
-        status: 200,
+        status: 303,
         headers: responseHeaders,
     });
 }
