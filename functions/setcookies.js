@@ -2,7 +2,7 @@ export async function onRequest(context) {
     const url = new URL(context.request.url);
 
     // log the whole request
-    console.log('Request to set cookies on foreign app:', context.request.headers);
+    console.log('Request to set cookies on foreign app:', context.request);
     //const token = url.searchParams.get("token");
 
     // get request headers
