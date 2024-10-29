@@ -1,18 +1,21 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const app = express();
-app.use(cookieParser());
 const cors = require('cors');
 
+const app = express();
+app.use(cookieParser());
+app.use(cors());
+
 app.get('/', (req, res) => {
-    const cookies = req.headers.get('cookie');
+    const cookies = req.headers.cookie;
     const jwt = cookies?.match(/jwt=([^;]+)/)?.[1];
 
     if (!jwt) {
         console.log('No JWT found, redirecting to authorizer');
 
         // Serve the HTML page with client-side fetch request to authorizer/checkcookies
-        return new Response(`
+        res.set('Content-Type', 'text/html');
+        return res.send(`
             <html>
             <body>
                 <h1>Welcome to foreign app!</h1>
@@ -29,51 +32,42 @@ app.get('/', (req, res) => {
                 </script>
             </body>
             </html>
-        `, { headers: { 'Content-Type': 'text/html' } });
+        `);
+    } else {
+        // If JWT exists, show the authenticated page
+        res.set('Content-Type', 'text/html');
+        return res.send('<h1>Welcome to foreign app! You are authenticated.</h1>');
     }
-    const responseHeaders = new Headers();
-    // redirectHeaders.append("Access-Control-Allow-Origin", "https://foreign.pages.dev");
-    // redirectHeaders.append("Access-Control-Allow-Credentials", "true");
-    responseHeaders.append("Content-Type", "text/html");
-    // If JWT exists, show the authenticated page
-    return new Response('<h1>Welcome to foreign app! You are authenticated.</h1>', { headers: responseHeaders });
 });
 
 // Endpoint to set cookies on bbb.com
 app.get('/setcookies', (req, res) => {
-    const url = new URL(req.url);
+    const url = new URL(req.url, `http://${req.headers.host}`);
     const token = url.searchParams.get("token");
 
     if (!token) {
         console.log('No token found in Authorization header');
-        return new Response('No token found in Authorization header', { status: 400 });
+        return res.status(400).send('No token found in Authorization header');
     }
+
     // CORS headers for the response
-    const origin = req.headers.get("Origin");
-    const responseHeaders = new Headers();
+    const origin = req.headers.origin;
     if (origin) {
-        responseHeaders.append("Access-Control-Allow-Origin", origin);
-        responseHeaders.append("Access-Control-Allow-Credentials", "true");
+        res.set("Access-Control-Allow-Origin", origin);
+        res.set("Access-Control-Allow-Credentials", "true");
     }
-    responseHeaders.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    responseHeaders.append("Access-Control-Allow-Headers", "Authorization, Content-Type");
-
-
-    // Check if token is present
-    if (!token) {
-        console.log('No token found');
-        return new Response('No token found', { status: 400, headers: responseHeaders });
-    }
+    res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
 
     // Set the cookie
-    responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
+    res.cookie("jwt", token, {
+        httpOnly: true,
+        secure: true,
+        path: "/"
+    });
 
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
-
-    return new Response(null, {
-        status: 200,
-        headers: responseHeaders,
-    });
+    return res.status(200).send('JWT cookie has been set.');
 });
 
 app.listen(3001, () => {
