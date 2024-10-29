@@ -21,7 +21,8 @@ app.get('/', (req, res) => {
                 <h1>Welcome to foreign app!</h1>
                 <script>
                     fetch('https://authorizer-git-main-abdulkarimbas-projects.vercel.app/checkcookies?redirectUrl=https://foreign-production.up.railway.app', {
-                        credentials: 'include' // Cross-site cookies
+                    method: 'POST',    
+                    credentials: 'include' // Cross-site cookies
                     })
                     .then(response => {
                         if (response.ok) {
