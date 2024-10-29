@@ -48,9 +48,9 @@ export async function onRequest(context) {
         <html>
             <body>
                 <script>
-                    // Set the JWT token in a cookie via JavaScript
-                    document.cookie = "jwt=${token}; path=/; Secure";
-                    // Redirect to the homepage or another endpoint
+                    // Attempt to set the JWT cookie with domain specified
+                    document.cookie = "jwt=${token}; path=/; Secure; domain=foreign.pages.dev";
+                    // Redirect after setting the cookie
                     window.location.href = '/';
                 </script>
                 <h1>Setting up your session...</h1>
