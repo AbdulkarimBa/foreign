@@ -1,23 +1,23 @@
 export async function onRequest(context) {
     const url = new URL(context.request.url);
-    //const token = url.searchParams.get("token");
+    const token = url.searchParams.get("token");
 
     // get request headers
-    console.log(JSON.stringify({
-        method: context.request.method,
-        url: context.request.url,
-        headers: Object.fromEntries(context.request.headers),
-    }, null, 2));
-    const headers = context.request.headers;
-    // get Authorization
-    const authorization = headers.get("Authorization");
-    if (!authorization) {
-        console.log('No Authorization header found');
-        return new Response('No Authorization header found', { status: 400 });
-    }
+    // console.log(JSON.stringify({
+    //     method: context.request.method,
+    //     url: context.request.url,
+    //     headers: Object.fromEntries(context.request.headers),
+    // }, null, 2));
+    // const headers = context.request.headers;
+    // // get Authorization
+    // const authorization = headers.get("Authorization");
+    // if (!authorization) {
+    //     console.log('No Authorization header found');
+    //     return new Response('No Authorization header found', { status: 400 });
+    // }
 
-    // get token from Authorization header
-    const token = authorization.split(" ")[1];
+    // // get token from Authorization header
+    // const token = authorization.split(" ")[1];
     if (!token) {
         console.log('No token found in Authorization header');
         return new Response('No token found in Authorization header', { status: 400 });
@@ -43,23 +43,6 @@ export async function onRequest(context) {
     responseHeaders.append("Set-Cookie", `jwt=${token}; HttpOnly; Secure; Path=/`);
 
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
-
-    // Return a 200 response with a client-side redirect script
-    // const htmlResponse = `
-    //     <!DOCTYPE html>
-    //     <html>
-    //         <head>
-    //             <title>Setting JWT</title>
-    //             <script>
-    //                 // Redirect after setting the cookie
-    //                 window.location.href = "https://foreign.pages.dev";
-    //             </script>
-    //         </head>
-    //         <body>
-    //             <p>Setting your session. Redirecting...</p>
-    //         </body>
-    //     </html>
-    // `;
 
     return new Response(null, {
         status: 200,
