@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
                     })
                     .then(response => {
                         if (response.ok) {
-                            window.location.href = '/';
+                            
                         }
                     })
                     .catch(error => console.error('Error fetching from authorizer', error));
