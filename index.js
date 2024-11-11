@@ -73,17 +73,7 @@ app.get('/setcookies', (req, res) => {
         maxAge: 3600000, // Set to 1 hour
         domain: 'foreign-production.up.railway.app',
     });
-    document.cookie(
-        'jwt',
-        token,
-        {
-            secure: true,
-            sameSite: 'strict',
-            path: '/',
-            maxAge: 3600000, // Set to 1 hour
-            domain: 'foreign-production.up.railway.app',
-        }
-    )
+
     console.log('JWT set on foreign app. Client will handle redirect to homepage.');
     return res.status(200).send('JWT cookie has been set.');
 });
