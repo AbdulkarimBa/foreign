@@ -54,8 +54,11 @@ app.get('/setcookies', (req, res) => {
     const origin = req.headers.origin;
     if (origin) {
         res.set("Access-Control-Allow-Origin", origin);
+        res.set("Access-Control-Allow-Credentials", "true");
     } else {
         res.set("Access-Control-Allow-Origin", "foreign-production.up.railway.app");
+        res.set("Access-Control-Allow-Credentials", "true");
+
     }
     res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
